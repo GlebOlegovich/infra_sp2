@@ -1,7 +1,5 @@
-from email.policy import default
 import os
 from datetime import timedelta
-import django
 from dotenv import load_dotenv
 
 load_dotenv()

@@ -1,6 +1,5 @@
 from django.contrib.auth import get_user_model
 from django.db.models import Avg
-from rest_framework.decorators import action
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, status, viewsets, mixins
 from rest_framework.decorators import action
