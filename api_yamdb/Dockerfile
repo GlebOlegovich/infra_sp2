@@ -2,10 +2,7 @@ FROM python:3.7-slim
 
 LABEL author='Godleib' version=1 broken_keyboards=5 pwd='/Users/mac/DEV/Yandex_prak/Production/Infrastructure (Docker)/Спринт_15/infra_sp2'
 
-# Сделать директорию /app рабочей директорией. 
-# WORKDIR создает дерикторию, если ее нет
 WORKDIR /app
-# RUN mkdir /app
 
 COPY requirements.txt /app
 
