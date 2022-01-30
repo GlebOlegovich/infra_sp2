@@ -79,8 +79,14 @@ NEED_TO_PARSE = {
 'comments.csv': Comment,
 }
 ```
+Автор:
+===
+Godleib - Email - ```godleib@yandex.ru```
+
+https://github.com/GlebOlegovich
 
 Отправки на ревью
 ===
 1) 28.01.2022 - Отправка на 1-ое ревью
+2) 30.01.2022 - Отправка на 2-ое ревью
 
