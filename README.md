@@ -1,6 +1,21 @@
-# Итоговое задание - Проект: запуск docker-compose
+API YAMDB
+====
+API для получения информации и обсуждения наиболее интересных произведений.
+Для автоматизации развертывания на боевых серверах используется среда виртуализации Docker, а также Docker-compose - инструмент для запуска многоконтейнерных приложений.
 
-## Описание:
+## Стек технологий:
+- Python 3
+- DRF (Django REST framework)
+- Django ORM
+- Docker
+- Gunicorn
+- nginx
+- Яндекс Облако(Ubuntu 18.04)
+- Django 2.2 TLS
+- PostgreSQL
+- GIT
+
+## О проекте:
 Реализована регистрация с кодом подтверждения и дальнейшая авторизация с использованием JWT токена, при отправке запроса к API.
 
 Проект **YaMDb** собирает **отзывы** (**Review**) пользователей на **произведения** (**Titles**). Произведения делятся на категории: «Книги», «Фильмы», «Музыка». Список **категорий** (**Category**) может быть расширен администратором (например, можно добавить категорию «Изобразительное искусство» или «Ювелирка»).
@@ -10,7 +25,12 @@
 Произведению может быть присвоен **жанр** (**Genre**) из списка предустановленных (например, «Сказка», «Рок» или «Артхаус»). Новые жанры может создавать только администратор.
 
 Благодарные или возмущённые пользователи оставляют к произведениям текстовые **отзывы** (**Review**) и ставят произведению оценку в диапазоне от одного до десяти (целое число); из пользовательских оценок формируется усреднённая оценка произведения — **рейтинг** (целое число). На одно произведение пользователь может оставить только один отзыв.
-___
+
+### Документация и возможности API:
+К проекту подключен redoc. Для просмотра документации используйте эндпойнт `redoc/`
+
+[Добавлена менеджмент команда, для выгрузки данных в БД, из csv.](#описание-команды-для-заполнения-базы-данными)
+
 ## Шаблон наполнения .env
 ```
 # указываем, с какой БД работаем
@@ -26,7 +46,70 @@ DB_HOST=
 # порт для подключения к БД
 DB_PORT=
 ```
-___
+
+## Автоматизация развертывания серверного ПО
+Для автоматизации развертывания ПО на боевых серверах используется среда виртуализации Docker, а также Docker-compose - инструмент для запуска многоконтейнерных приложений. Docker позволяет «упаковать» приложение со всем его окружением и зависимостями в контейнер, который может быть перенесён на любую Linux -систему, а также предоставляет среду по управлению контейнерами. Таким образом, для разворачивания серверного ПО достаточно чтобы на сервере с ОС семейства Linux были установлены среда Docker и инструмент Docker-compose.
+
+Ниже представлен Dockerfile - файл с инструкцией по разворачиванию Docker-контейнера веб-приложения:
+```Dockerfile
+FROM python:3.7-slim
+
+LABEL author='Godleib' version=1 broken_keyboards=5 pwd='/Users/mac/DEV/Yandex_prak/Production/Infrastructure (Docker)/Спринт_15/infra_sp2'
+
+WORKDIR /app
+
+COPY requirements.txt /app
+
+RUN pip3 install -r /app/requirements.txt --no-cache-dir
+
+COPY ./ /app
+
+CMD ["gunicorn", "api_yamdb.wsgi:application", "--bind", "0:8000" ]
+```
+В файле «docker-compose.yml» описываются запускаемые контейнеры: веб-приложения, СУБД PostgreSQL и сервера Nginx.
+```sh
+version: '3.8'
+
+services:
+  db:
+    image: postgres:13.0-alpine
+
+    volumes:
+      - /var/lib/postgresql/data/
+    env_file:
+      - ./.env
+  web:
+    build: ../api_yamdb
+    restart: always
+
+    volumes:
+    - static_value:/app/static/
+    - media_value:/app/media/
+    depends_on:
+      - db
+    env_file:
+      - ./.env
+
+  nginx:
+    image: nginx:1.21.3-alpine
+
+    ports:
+      - "80:80"
+
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+
+      - static_value:/var/html/static/
+
+      - media_value:/var/html/media/
+
+    depends_on:
+      - web
+volumes:
+  static_value:
+  media_value:
+```
+
 ## Описание команд для запуска приложения в контейнерах
 Для запуска проекта в контейнерах используем **docker-compose** : ```docker-compose up -d --build```, находясь в директории (infra_sp2) с ```docker-compose.yaml```
 
@@ -55,11 +138,8 @@ docker-compose exec web bash
 
 >>> python manage.py loaddata dump.json
 ```
-___
 ## Описание команды для заполнения базы данными
 ```python manage.py import_csv_to_db``` в контейнере web (```docker-compose exec web bash```)
-
-
 
 >Это - менеджмент команда.
 >
@@ -79,14 +159,14 @@ NEED_TO_PARSE = {
 'comments.csv': Comment,
 }
 ```
-Автор:
-===
-Godleib - Email - ```godleib@yandex.ru```
 
-https://github.com/GlebOlegovich
-
-Отправки на ревью
+Авторы:
 ===
-1) 28.01.2022 - Отправка на 1-ое ревью
-2) 30.01.2022 - Отправка на 2-ое ревью
+ Работа выполнялась в команде, я (Godleib) был выбран в роли "Тимлида", распределял задачи между коллегами, разбирался и фиксил недочеты с ошибками.
+[Ссылка на репозиторий, в котором велась разработка проекта в команде](https://github.com/GlebOlegovich/api_yamdb)
+[Godleib](https://github.com/GlebOlegovich) - Email - ```godleib@yandex.ru```
+[SubbotinaOlga](https://github.com/SubbotinaOlga)
+[george](https://github.com/george20211)
+
+
 
