@@ -124,7 +124,7 @@ docker-compose exec web python manage.py collectstatic --no-input
 # Для дампа данных из БД
 docker-compose exec web python manage.py dumpdata > dump.json
 ```
-### Для выгрузки данных из дампа в БД
+### Для выгрузки данных из дампа (резервной копии) в БД
 ```bash
 docker-compose exec web bash
 # Сброс БД, суперюзеры так же удаляются
@@ -138,7 +138,7 @@ docker-compose exec web bash
 
 >>> python manage.py loaddata dump.json
 ```
-## Описание команды для заполнения базы данными
+## Описание команды для заполнения БД данными из csv:
 ```python manage.py import_csv_to_db``` в контейнере web (```docker-compose exec web bash```)
 
 >Это - менеджмент команда.
