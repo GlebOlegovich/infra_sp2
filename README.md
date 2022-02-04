@@ -164,8 +164,11 @@ NEED_TO_PARSE = {
 ===
  Работа выполнялась в команде, я (Godleib) был выбран в роли "Тимлида", распределял задачи между коллегами, разбирался и фиксил недочеты с ошибками.
 [Ссылка на репозиторий, в котором велась разработка проекта в команде](https://github.com/GlebOlegovich/api_yamdb)
+
 [Godleib](https://github.com/GlebOlegovich) - Email - ```godleib@yandex.ru```
+
 [SubbotinaOlga](https://github.com/SubbotinaOlga)
+
 [george](https://github.com/george20211)
 
 
